@@ -10,8 +10,28 @@ import App from '../App';
 import {it} from '@jest/globals';
 
 // Note: test renderer must be required after react-native.
-import renderer from 'react-test-renderer';
+import {fireEvent, render, screen} from '@testing-library/react-native';
 
-it('renders correctly', () => {
-  renderer.create(<App />);
+describe('check render', () => {
+  it('renders correctly', () => {
+    render(<App />);
+    expect(screen.toJSON()).toMatchSnapshot();
+  });
+
+  it('renders correctly counter and button', () => {
+    const page = render(<App />);
+    expect(page.getByTestId('counter-label')).toBeTruthy();
+    expect(page.getByTestId('counter-button')).toBeTruthy();
+  });
+});
+
+describe('check counter', () => {
+  it('renders correctly counter and button', () => {
+    const page = render(<App />);
+    const button = page.getByTestId('counter-button');
+    fireEvent.press(button);
+    expect(page.getByText('1')).toBeTruthy();
+    fireEvent.press(button);
+    expect(page.getByText('2')).toBeTruthy();
+  });
 });

@@ -1,0 +1,27 @@
+appId: org.reactjs.native.example.testCli
+---
+- launchApp
+- tapOn:
+    id: 'counter-button'
+    repeat: 3
+    delay: 500
+
+- assertVisible:
+    id: 'counter-label'
+    text: '3'
+    enabled: true
+
+- tapOn:
+    id: 'search-input'
+
+- inputText: 'hola :)'
+
+- pressKey: Enter
+
+- assertVisible:
+    id: 'search-input'
+    text: 'hola :)'
+    enabled: true
+
+- tapOn:
+    id: 'search-button'
