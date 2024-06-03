@@ -5,31 +5,30 @@
  * @format
  */
 
-import React, {useState} from 'react';
+import React from 'react';
 import {
+  FlatList,
   SafeAreaView,
   StatusBar,
   StyleSheet,
   Text,
-  TouchableOpacity,
   useColorScheme,
 } from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-import Icon from 'react-native-vector-icons/FontAwesome';
 import {Search} from './components/Search';
 import api from './http/fetch';
+import Button from './components/Button';
+import {useCounter} from './hooks/useCounter';
 
 function App(): React.JSX.Element {
-  const [counter, setCounter] = useState(0);
+  const {increment, decrement, counter} = useCounter(10);
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
-
-  const handlePress = () => setCounter(curr => curr + 1);
 
   return (
     <SafeAreaView style={[backgroundStyle, styles.container]}>
@@ -42,14 +41,30 @@ function App(): React.JSX.Element {
         {counter}
       </Text>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handlePress}
-        testID="counter-button">
-        <Icon name="plus" size={30} color="#dfe6e9" />
-      </TouchableOpacity>
+      <Button onPress={increment} testID="counter-button">
+        <Button.Icon name="plus" size={30} color="#dfe6e9" />
+      </Button>
+
+      <Button onPress={decrement}>
+        {/* <Button.Icon name="minus" size={30} color="#dfe6e9" /> */}
+        <Button.Label>Contador</Button.Label>
+      </Button>
 
       <Search onPress={api.get} />
+
+      <FlatList
+        renderItem={({item, index}) => {
+          return (
+            <Button.Icon
+              name={item}
+              size={30}
+              color="#000"
+              key={index.toString()}
+            />
+          );
+        }}
+        data={['plus', 'minus', 'comment', 'search']}
+      />
     </SafeAreaView>
   );
 }
