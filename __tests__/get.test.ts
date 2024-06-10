@@ -1,9 +1,8 @@
-import api from '../http/fetch';
+import api from '../src/http/fetch';
 
 describe('test get', () => {
   it('get data', async () => {
     const results = await api.get('');
-    console.log({results});
     expect(results).toBeTruthy();
   });
 
@@ -20,7 +19,7 @@ describe('test get mocked', () => {
   });
 
   it('get mocked data', async () => {
-    jest.mock('../http/fetch');
+    jest.mock('../src/http/fetch');
     const mockedApi = jest.mocked(api);
     mockedApi.get.mockImplementation(() => Promise.resolve('true'));
     await expect(mockedApi.get('')).resolves.toBe('true');

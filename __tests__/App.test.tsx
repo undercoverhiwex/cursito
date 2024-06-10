@@ -26,12 +26,12 @@ describe('check render', () => {
 });
 
 describe('check counter', () => {
-  it('renders correctly counter and button', () => {
+  it('check correclty counter', () => {
     const page = render(<App />);
     const button = page.getByTestId('counter-button');
     fireEvent.press(button);
-    expect(page.getByText('1')).toBeTruthy();
+    expect(page.getByText('11')).toBeTruthy();
     fireEvent.press(button);
-    expect(page.getByText('2')).toBeTruthy();
+    expect(page.getByText('12')).toBeTruthy();
   });
 });

@@ -4,7 +4,7 @@
 
 import 'react-native';
 import React from 'react';
-import {Search} from '../components/Search';
+import {Search} from '../src/components/Search';
 
 // Note: import explicitly to use the types shipped with jest.
 import {it} from '@jest/globals';
