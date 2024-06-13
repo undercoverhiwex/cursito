@@ -14,7 +14,7 @@ import api from '../../http/fetch';
 import Button from '../../components/Button';
 import {useCounter} from '../../hooks/useCounter';
 
-export const FirstSteps = () => {
+export const FirstSteps = ({navigation}) => {
   const {increment, decrement, counter} = useCounter(10);
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -41,6 +41,10 @@ export const FirstSteps = () => {
         <Button.Label>Contador</Button.Label>
       </Button>
 
+      <Button onPress={() => navigation.goBack()}>
+        <Button.Label>Volver</Button.Label>
+      </Button>
+
       <Search onPress={api.get} />
 
       <FlatList
@@ -65,6 +69,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#2c3e50',
   },
   text: {
     fontSize: 30,
