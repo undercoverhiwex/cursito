@@ -70,7 +70,6 @@ export const GraphPage = ({navigation}) => {
 
   const handleOnEndReached = () => {
     const nextPage = data?.Page.pageInfo?.currentPage + 1;
-    console.log('Disparado', nextPage, data)
       return fetchMore({
         variables: {
           page: nextPage,
