@@ -16,7 +16,7 @@ import {Main} from './src/navigator/Stack';
 const cache = new InMemoryCache();
 
 const client = new ApolloClient({
-  uri: 'https://flyby-router-demo.herokuapp.com/',
+  uri: 'https://graphql.anilist.co/',
   cache,
 });
 

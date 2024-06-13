@@ -15,18 +15,27 @@ import Button from '../../components/Button';
 import {gql, useQuery} from '@apollo/client';
 
 const GET_USERS = gql`
-  query GetLocations {
-    locations {
+  query ($page: Int, $perPage: Int) {
+    Page(page: $page, perPage: $perPage) {
+    users {
       id
       name
-      description
-      photo
+      avatar {
+        large
+        medium
+      }
+      previousNames {
+        name
+        createdAt
+        updatedAt
+      }
     }
+  }
   }
 `;
 
 export const GraphPage = ({navigation}) => {
-  const {loading, error, data} = useQuery(GET_USERS, { variables: {page: 1, perPage: 50}, fetchPolicy: 'network-only', });
+  const {loading, error, data} = useQuery(GET_USERS, { variables: {page: 1, perPage: 50 }, fetchPolicy: 'network-only', });
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
@@ -50,7 +59,7 @@ export const GraphPage = ({navigation}) => {
   const renderItem = ({item, index}) => {
     return (
       <View style={styles.row} key={index.toString()}>
-          <Image source={{ uri: item.photo }} height={20} width={20} />
+          <Image source={{ uri: item.avatar.medium }} height={20} width={20} />
           <Text style={styles.rowLabel}>{item.name}</Text>
         </View>
     )
@@ -63,7 +72,7 @@ export const GraphPage = ({navigation}) => {
         backgroundColor={backgroundStyle.backgroundColor}
       />
       {loading && <ActivityIndicator />}
-      {!loading && <FlatList data={data?.locations} renderItem={renderItem} />}
+      {!loading && <FlatList data={data?.Page.users} renderItem={renderItem} />}
       {!loading && (
         <Button onPress={() => navigation.goBack()}>
           <Button.Label>Volver</Button.Label>
