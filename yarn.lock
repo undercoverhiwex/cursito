@@ -3384,6 +3384,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"apollo3-cache-persist@npm:^0.15.0":
+  version: 0.15.0
+  resolution: "apollo3-cache-persist@npm:0.15.0"
+  peerDependencies:
+    "@apollo/client": ^3.7.17
+  checksum: 99d69566154f1a806db22e26c5ed12834c466fd75b05048041b49e8e61483720569f63c68ffdc00314f8a248e13aa3d3014768c90a7993f47f862cd1df94fe4b
+  languageName: node
+  linkType: hard
+
 "appdirsjs@npm:^1.2.4":
   version: 1.2.7
   resolution: "appdirsjs@npm:1.2.7"
@@ -9431,6 +9440,7 @@ __metadata:
     "@types/react": ^18.2.6
     "@types/react-native-vector-icons": ^6.4.18
     "@types/react-test-renderer": ^18.0.0
+    apollo3-cache-persist: ^0.15.0
     babel-jest: ^29.6.3
     eslint: ^8.19.0
     graphql: ^16.8.2
