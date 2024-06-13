@@ -12,37 +12,73 @@ import {
 } from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import Button from '../../components/Button';
-import {gql, useQuery} from '@apollo/client';
+import {NetworkStatus, gql, useQuery} from '@apollo/client';
 
 const GET_USERS = gql`
   query ($page: Int, $perPage: Int) {
     Page(page: $page, perPage: $perPage) {
-    users {
-      id
-      name
-      avatar {
-        large
-        medium
+      pageInfo {
+        perPage
+        hasNextPage
+        currentPage
       }
-      previousNames {
+      users {
+        id
         name
-        createdAt
-        updatedAt
+        avatar {
+          large
+          medium
+        }
+        previousNames {
+          name
+          createdAt
+          updatedAt
+        }
       }
-    }
   }
   }
 `;
 
 export const GraphPage = ({navigation}) => {
-  const {loading, error, data} = useQuery(GET_USERS, { variables: {page: 1, perPage: 50 }, fetchPolicy: 'network-only', });
+  const {loading, error, data, fetchMore, refetch, networkStatus} = useQuery(GET_USERS, { variables: {page: 1, perPage: 50 }, fetchPolicy: 'network-only', });
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  console.log({data});
+  const refreshing = networkStatus === NetworkStatus.refetch
+
+  const onUpdate = (prev, { fetchMoreResult }) => {
+    if (!fetchMoreResult) return prev
+    const { pageInfo } = fetchMoreResult.Page
+    const users = [
+      ...prev.Page.users,
+      ...fetchMoreResult.Page.users,
+    ]
+    return Object.assign({}, prev, {
+      Page: {
+        __typename: prev.Page.__typename,
+        users,
+        pageInfo: {
+          "__typename": "PageInfo",
+          ...pageInfo,
+        }
+      },
+    })
+  }
+
+  const handleOnEndReached = () => {
+    const nextPage = data?.Page.pageInfo?.currentPage + 1;
+    console.log('Disparado', nextPage, data)
+      return fetchMore({
+        variables: {
+          page: nextPage,
+          perPage: 50
+        },
+        updateQuery: onUpdate,
+      })
+  }
 
   if (error) {
     <SafeAreaView style={[backgroundStyle, styles.container]}>
@@ -72,7 +108,17 @@ export const GraphPage = ({navigation}) => {
         backgroundColor={backgroundStyle.backgroundColor}
       />
       {loading && <ActivityIndicator />}
-      {!loading && <FlatList data={data?.Page.users} renderItem={renderItem} />}
+      {!loading && (
+        <FlatList
+          style={styles.list}
+          data={data?.Page.users}
+          renderItem={renderItem}
+          onRefresh={refetch}
+          refreshing={refreshing}
+          onEndReachedThreshold={1}
+          onEndReached={handleOnEndReached}
+        />
+  )}
       {!loading && (
         <Button onPress={() => navigation.goBack()}>
           <Button.Label>Volver</Button.Label>
@@ -103,5 +149,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginLeft: 10
+  },
+  list: {
+    width: '100%',
+    paddingHorizontal: 20
   }
 });
